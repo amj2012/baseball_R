@@ -80,8 +80,8 @@ Teams %>%
   filter(yearID == 1927, teamID == "NYA")
 
 ## ----stanton2017, warning=FALSE, echo=FALSE, fig.cap="Pitch type and location for Giancarlo Stanton's 59 home runs of the 2017 season."----
-statcast2017 <- read_csv("data/statcast2017.csv")
-stanton_hr <- statcast2017 %>% 
+stanton2017 <- read_csv("../data/statcast/gstanton2017.csv")
+stanton_hr <- stanton2017 %>% 
   filter(player_name == "Giancarlo Stanton", events == "home_run") %>%
   mutate(is_fb = pitch_type %in% c("FF", "FT", "SI", "FC"))
 
@@ -111,7 +111,7 @@ Pitching %>%
 
 ## ----echo=FALSE----------------------------------------------------------
 load_gamelog <- function(season) {
-  glheaders <- read.csv("data/game_log_header.csv")
+  glheaders <- read.csv("../data/game_log_header.csv")
   remote <- paste0("http://www.retrosheet.org/gamelogs/gl", 
                    season, ".zip")
   local <- paste0("gl", season, ".zip")
@@ -134,7 +134,10 @@ gl %>%
   print.data.frame()
 
 ## ----retro,include=FALSE-------------------------------------------------
+# if installing from CRAN doesn't work, this might:
+# devtools::install_github("beanumber/retro", force = TRUE)
 library(retro)
+system("mysql -e 'CREATE DATABASE IF NOT EXISTS retrosheet;'")
 db <- src_mysql_cnf("retrosheet")
 retro <- etl("retro", db = db, dir = "~/dumps/retro/")
 
