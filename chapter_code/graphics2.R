@@ -47,6 +47,8 @@ ggplot(hof_eras, aes(Era, N)) +
 ## ggsave("bargraph.png")
 
 ## ------------------------------------------------------------------------
+# the code chunk below will create a graphs.pdf 
+# file in your working directory
 pdf("graphs.pdf")
 ggplot(hof, aes(Era)) + geom_bar() 
 ggplot(hof_eras, aes(Era, N)) + geom_point()
