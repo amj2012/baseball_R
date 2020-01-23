@@ -60,7 +60,7 @@ spray_chart(correa_bip, aes(x = hc_x, y = -hc_y, color = events)) +
 ## write_csv(sc_2017, path = "data/statcast2017.csv")
 
 ## ----sc_2017_load, warning=FALSE-----------------------------------------
-sc_2017 <- read_csv("../data/statcast2017.csv")
+sc_2017 <- read_csv("../data/statcast/statcast2017.csv")
 sc_bips <- sc_2017 %>%
   filter(type == "X")
 
@@ -123,7 +123,7 @@ ev_plot +
   guides(color = guide_colorbar(title = "wOBA"))
 
 ## ----warning=FALSE-------------------------------------------------------
-sc_bips_16 <- read_csv("../data/statcast2016.csv") %>% 
+sc_bips_16 <- read_csv("../data/statcast/statcast2016.csv") %>% 
   filter(type == "X") %>%  
   mutate(HR = ifelse(events == "home_run", 1, 0))
 
