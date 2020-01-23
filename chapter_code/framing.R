@@ -6,6 +6,9 @@ library(tidyverse)
 db <- src_sqlite("../data/pitchrx.sqlite", create = TRUE)
 
 ## ----pitchRx, eval=FALSE-------------------------------------------------
+## The code below only needs to be run if ../data/pitchrx.sqlite
+## doesn't already exist.
+##
 ## library(pitchRx)
 ## files <- c("inning/inning_all.xml", "inning/inning_hit.xml",
 ##            "miniscoreboard.xml", "players.xml")
@@ -130,10 +133,15 @@ diffs <- hand_grid_hats %>%
 tile_plot %+% diffs
 
 ## ----sc_2017, warning=FALSE, eval=TRUE-----------------------------------
-sc_2017 <- read_csv("data/statcast2017.csv")
+sc_2017 <- read_csv("../data/statcast/statcast2017.csv")
 
 ## ------------------------------------------------------------------------
-set.seed(111653)
+## Changed seed from what was originally in the book.
+## The number of rows in sc_2017 appears to be
+## different from what the book said it was working
+## with, so setting the past seed would not have 
+## returned the same results anyways for me.
+set.seed(1116)
 sc_taken <- sc_2017 %>%
   filter(type != "X") %>%
   rename(px = plate_x, pz = plate_z) %>%
@@ -142,8 +150,10 @@ sc_taken <- sc_2017 %>%
                                type = "response"))
 
 ## ------------------------------------------------------------------------
+# Changed former reference to "pos2_person_id 
+# column to fielder_2_1 column.
 library(lme4)
-mod_a <- glmer(type == "S" ~ strike_prob + (1|pos2_person_id),
+mod_a <- glmer(type == "S" ~ strike_prob + (1|fielder_2_1),
                data = sc_taken, family = binomial)
 
 ## ------------------------------------------------------------------------
@@ -160,7 +170,7 @@ c_effects <- mod_a %>%
             effect = condval)
 
 ## ------------------------------------------------------------------------
-master_id <- read_csv("data/masterid.csv")
+master_id <- read_csv("../data/masterid.csv")
 c_effects <- c_effects %>%
   left_join(select(master_id, mlb_id, mlb_name),
             by = c("id" = "mlb_id")) %>%
@@ -170,7 +180,7 @@ c_effects %>% head()
 c_effects %>% tail()
 
 ## ------------------------------------------------------------------------
-mod_b <- glmer(type == "S" ~ strike_prob + (1|pos2_person_id) +
+mod_b <- glmer(type == "S" ~ strike_prob + (1|fielder_2_1) +
                  (1|batter) + (1|pitcher),
                data = sc_taken, family = binomial)
 
@@ -181,7 +191,7 @@ tidy(mod_b, effects = "ran_pars")
 c_effects <- mod_b %>%
   ranef() %>%
   as_tibble() %>%
-  filter(grpvar == "pos2_person_id") %>%
+  filter(grpvar == "fielder_2_1") %>%
   transmute(id = as.numeric(as.character(grp)), 
             effect = condval)
 c_effects <- c_effects %>%
