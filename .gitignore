@@ -3,3 +3,5 @@
 .RData
 .Ruserdata
 data/statcast/statcast2017.csv
+data/statcast/statcast2016.csv
+data/pitchrx.sqlite
