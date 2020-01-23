@@ -202,7 +202,7 @@ clump_test <- function(data, playerid) {
 clump_test(data2016, "troum001")
 
 ## ----warning=FALSE-------------------------------------------------------
-statcast2017 <- read_csv("../data/statcast2017.csv")
+statcast2017 <- read_csv("../data/statcast/statcast2017.csv")
 statcast2017 %>% 
   filter(type == "X") -> sc_ip2017
 sc_ip2017 %>% 
